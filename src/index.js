@@ -1,33 +1,31 @@
-const path = require("path");
+import axios from "axios";
 
-module.exports = {
-  entry: "./src/index.js",
-  output: {
-    filename: "bundle.js",
-    path: path.resolve(__dirname, "dist"),
-  },
-  module: {
-    rules: [
-      {
-        test: /\.css$/,
-        use: ["style-loader", "css-loader"],
-      },
-      {
-        test: /\.(png|jpg|gif)$/,
-        use: [
-          {
-            loader: "file-loader",
-            options: {
-              outputPath: "images",
-            },
-          },
-        ],
-      },
-    ],
-  },
-  devServer: {
-    contentBase: path.join(__dirname, "dist"),
-    compress: true,
-    port: 9000,
-  },
-};
+document.addEventListener("DOMContentLoaded", () => {
+  const ticketContainer = document.querySelector("#ticket-container");
+
+  async function fetchTickets() {
+    try {
+      const response = await axios.get(
+        "http://localhost:7070/?method=allTickets"
+      );
+      const tickets = response.data;
+
+      // Добавлено: проверка на пустой массив
+      if (tickets.length === 0) {
+        ticketContainer.textContent = "No tickets available."; // Сообщение о пустом массиве
+      } else {
+        tickets.forEach((ticket) => {
+          const ticketElement = document.createElement("div");
+          ticketElement.textContent = `${ticket.name} (Created: ${new Date(
+            ticket.created
+          ).toLocaleString()})`;
+          ticketContainer.appendChild(ticketElement);
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching tickets:", error);
+    }
+  }
+
+  fetchTickets();
+});
