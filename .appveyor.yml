@@ -15,11 +15,11 @@ install:
 build: off  # отключаем встроенную в Appveyor систему сборки
 
 build_script:
-  - npm run build  # команда сборки для Webpack
+- npx webpack --mode production
 
 test_script:
  # - npm run lint  # команда линтинга (если есть линтер)
- # - npm test      # команда для тестирования (если у вас есть тесты)
+- npm test      # команда для тестирования (если у вас есть тесты)
 
 deploy_script:  # скрипт развертывания
   - git config --global credential.helper store
