@@ -1,31 +1,24 @@
-import axios from "axios";
+async function fetchTickets() {
+  try {
+    const response = await axios.get("http://localhost:7070/?method=allTickets");
+    const tickets = response.data;
 
-document.addEventListener("DOMContentLoaded", () => {
-  const ticketContainer = document.querySelector("#ticket-container");
+    // Добавлено: вывод для проверки данных
+    console.log("Tickets fetched:", tickets); // Выводим полученные данные
 
-  async function fetchTickets() {
-    try {
-      const response = await axios.get(
-        "http://localhost:7070/?method=allTickets"
-      );
-      const tickets = response.data;
-
-      // Добавлено: проверка на пустой массив
-      if (tickets.length === 0) {
-        ticketContainer.textContent = "No tickets available."; // Сообщение о пустом массиве
-      } else {
-        tickets.forEach((ticket) => {
-          const ticketElement = document.createElement("div");
-          ticketElement.textContent = `${ticket.name} (Created: ${new Date(
-            ticket.created
-          ).toLocaleString()})`;
-          ticketContainer.appendChild(ticketElement);
-        });
-      }
-    } catch (error) {
-      console.error("Error fetching tickets:", error);
+    // Проверка на пустой массив
+    if (Array.isArray(tickets) && tickets.length === 0) {
+      ticketContainer.textContent = "No tickets available."; // Сообщение о пустом массиве
+    } else if (Array.isArray(tickets)) {
+      tickets.forEach((ticket) => {
+        const ticketElement = document.createElement("div");
+        ticketElement.textContent = `${ticket.name} (Created: ${new Date(ticket.created).toLocaleString()})`;
+        ticketContainer.appendChild(ticketElement);
+      });
+    } else {
+      ticketContainer.textContent = "Unexpected response format."; // Если данные не массив
     }
+  } catch (error) {
+    console.error("Error fetching tickets:", error);
   }
-
-  fetchTickets();
-});
+}
