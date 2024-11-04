@@ -1,29 +1,29 @@
-image: Ubuntu2204  # используем образ для Ubuntu 22.04
+image: Ubuntu2204 # используем образ для Ubuntu 22.04
 
-stack: node 20  # версия Node.js 20
+stack: node 20 # версия Node.js 20
 
 branches:
   only:
-    - master  # следим за веткой master
-    - main    # следим за веткой main
+    - master # следим за веткой master
+    - main # следим за веткой main
 
-cache: node_modules  # кеширование node_modules
+cache: node_modules # кеширование node_modules
 
 install:
-  - npm install  # установка зависимостей через npm
+  - npm install # установка зависимостей через npm
 
-build: off  # отключаем встроенную в Appveyor систему сборки
+build: off # отключаем встроенную в Appveyor систему сборки
 
 build_script:
-- npx webpack --mode production
+  - npx webpack --mode production
 
 test_script:
- # - npm run lint  # команда линтинга (если есть линтер)
-- npm test      # команда для тестирования (если у вас есть тесты)
+  # - npm run lint  # команда линтинга (если есть линтер)
+  # - npm test      # команда для тестирования (если у вас есть тесты)
 
-deploy_script:  # скрипт развертывания
+deploy_script: # скрипт развертывания
   - git config --global credential.helper store
   - git config --global user.name "AppVeyor"
   - git config --global user.email "ci@appveyor.com"
   - echo "https://$GITHUB_TOKEN:x-oauth-basic@github.com" > "$HOME/.git-credentials"
-  - npx gh-pages -d dist -u "appveyor-bot <ci@appveyor.com>"  # деплой через GitHub Pages, указываем папку dist
+  - npx gh-pages -d dist -u "appveyor-bot <ci@appveyor.com>" # деплой через GitHub Pages, указываем папку dist
